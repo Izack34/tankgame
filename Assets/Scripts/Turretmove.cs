@@ -4,11 +4,26 @@ using UnityEngine;
 
 public class Turretmove : MonoBehaviour
 {
-    private float movX;
-    public Transform child_transf;
     
+    private float movX;
+    
+    public float yMin = -10;
+    public float yMax = 40;
+    float xRotation = 0;
+    float yRotation = 0;
+    public GameObject target;
+    public float distance = 10.0f;
+    public float sensitivity = 3.0f;
+    private Rigidbody rb_c;
+    private Vector3 offset;
+     
+
     private void Start() {
         Cursor.lockState = CursorLockMode.Locked;
+        rb_c = target.GetComponent<Rigidbody>();
+            Cursor.lockState = CursorLockMode.Locked;
+            offset = (transform.position - target.transform.position).normalized * distance;
+            transform.position = target.transform.position + offset;
     }
 
     void Update()
@@ -16,22 +31,16 @@ public class Turretmove : MonoBehaviour
         if (Input.GetKey(KeyCode.Escape))
             Cursor.lockState = CursorLockMode.None;
 
-        float rotX =  Input.GetAxis("Mouse X");
-        float rotY =  Input.GetAxis("Mouse Y");
+        Vector2 controlInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        xRotation += Mathf.Repeat(controlInput.x, 360.0f);
+        yRotation -= controlInput.y;
+        yRotation = Mathf.Clamp(yRotation, yMin, yMax);
+        Quaternion newRotation = Quaternion.AngleAxis(xRotation, Vector3.up);
+        newRotation *= Quaternion.AngleAxis(yRotation, Vector3.right);
+        transform.rotation = newRotation;
+        transform.position = target.transform.position - (transform.forward * distance);
         
-        //Debug.Log(rotY);
-        transform.Rotate(0f,rotX,0f);
 
-        float minRotation = -45;
-        float maxRotation = 45;
-        child_transf.Rotate(0f,0f,rotY);
-
-        Vector3 currentRotation = child_transf.localRotation.eulerAngles;
-        Debug.Log(currentRotation.z);
-        currentRotation.z = Mathf.Clamp(currentRotation.z-360, -20, 30);
-
-        child_transf.localEulerAngles = new Vector3(0f,0f,currentRotation.z);
-        //child_transf.localRotation = Quaternion.Euler(currentRotation);
-       
+        
     }
 }
