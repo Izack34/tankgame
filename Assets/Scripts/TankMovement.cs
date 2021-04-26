@@ -15,7 +15,7 @@ public class TankMovement : MonoBehaviour
     Quaternion quat2;
     Rigidbody rb;
     float troque;
-    public float force = 1200f;
+    public float force = 120000f;
     
     private void Start() {
         rb = this.GetComponent<Rigidbody>();
@@ -23,10 +23,11 @@ public class TankMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(WheelcollsL[1].rpm);
+        //Debug.Log(WheelcollsL[1].rpm);
 
         Vector2 V = new Vector2(Input.GetAxis("Vertical"),Input.GetAxis("Horizontal"));
         //Debug.Log(V);
+        
         for( int i = 0; i < WheelcollsR.Length ; i++){
             WheelcollsR[i].GetWorldPose(out pos1, out quat1);
             WheelcollsL[i].GetWorldPose(out pos2, out quat2);
@@ -50,34 +51,34 @@ public class TankMovement : MonoBehaviour
         }
         if(V.y < 0){
 
-            rb.AddTorque(transform.up * 4000000 * -1);
+            rb.AddTorque(transform.up * 40 * -1);
             for( int i = 0; i < WheelcollsR.Length ; i++){
 
                 troque = Mathf.Clamp(20 * force * Time.fixedDeltaTime,-80000,80000);
-                WheelcollsR[i].motorTorque = -400000;
-                WheelcollsL[i].motorTorque = 400000;
+                WheelcollsR[i].motorTorque = -100000;
+                WheelcollsL[i].motorTorque = 100000;
             }
 
             return;
         }
         if(V.y > 0){
-            rb.AddTorque(transform.up * 4000000 * 1);
+            rb.AddTorque(transform.up * 40 * 1);
             for( int i = 0; i < WheelcollsR.Length ; i++){
 
                 troque = Mathf.Clamp(20 * force * Time.fixedDeltaTime,-80000,80000);
-                WheelcollsR[i].motorTorque = 400000;
-                WheelcollsL[i].motorTorque = -400000;
+                WheelcollsR[i].motorTorque = 100000;
+                WheelcollsL[i].motorTorque = -100000;
             }
             return;
         }
 
         troque = Mathf.Clamp(V.x * 20 * force * Time.fixedDeltaTime,-80000,80000);
         for( int i = 0; i < WheelcollsR.Length ; i++){
-            Debug.Log(troque);
+            //Debug.Log(troque);
             WheelcollsR[i].motorTorque = -troque ;
             WheelcollsL[i].motorTorque = -troque;
         }
 
-        
+        //rb.MovePosition(transform.position+ new Vector3(V.x,0,V.y) * Time.deltaTime*50);
     }
 }
