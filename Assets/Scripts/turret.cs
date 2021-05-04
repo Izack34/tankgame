@@ -15,13 +15,17 @@ public class turret : MonoBehaviour
 
     void Update()
     {
-        look();
+        //look();
+        //syncRot();
 
+    }
+
+    void syncRot(){
+        transform.Rotate(rootofvehicle.rotation.x, 0.0f, rootofvehicle.rotation.z, Space.Self);;
     }
 
     void look(){
 
-        RaycastHit lookreturn;
         Vector3 DirectionRay = MainCam.transform.TransformDirection(0,0,80);
 
         //Physics.Raycast(MainCam.transform.position, DirectionRay, out lookreturn, 200);
@@ -37,24 +41,28 @@ public class turret : MonoBehaviour
         //Vector3 targetPoint = new Vector3(lookreturn.transform.position.x, transform.position.y, lookreturn.transform.position.z) 
         //                                   - transform.position;
         Debug.DrawRay(transform.position, DirectionRay, Color.red);
-        //Vector3 dir = DirectionRay - new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        //Vector3 dir = new Vector3(lookreturn.transform.position.x, lookreturn.transform.position.y, lookreturn.transform.position.z); 
-        //Debug.Log(transform.right*-1);
-        Vector3 newDirection = Vector3.RotateTowards(transform.right*-1, new Vector3(DirectionRay.x, 0, DirectionRay.z), 2f, 0.0f);
+        
+        Vector3 newDirection = Vector3.RotateTowards(rootofvehicle.right*-1, new Vector3(DirectionRay.x, 0, DirectionRay.z), 2f, 0.0f);
+
         //Quaternion rotation = Quaternion.Euler (270, 180, newDirection.z);
         //transform.rotation = Quaternion.Euler(rootofvehicle.rotation.x, transform.rotation.y, rootofvehicle.rotation.z);
+
         Debug.Log(newDirection);
         
         //Debug.Log(angle);
         //transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 2.0f);
         //Quaternion targetRotation = Quaternion.LookRotation (DirectionRay, new Vector3(0,1,1));
         //Debug.Log(Quaternion.LookRotation(newDirection));
-        Quaternion rot = Quaternion.LookRotation(newDirection);
-        //transform.Rotate(0f,angle,0f);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 4.0f);
-        //transform.rotation = Quaternion.Euler(-rootofvehicle.rotation.eulerAngles.z, transform.rotation.eulerAngles.y, -rootofvehicle.rotation.eulerAngles.x);
 
-        
+        Quaternion rot = Quaternion.LookRotation(newDirection);
+        Quaternion AxisofTurret = new Quaternion(rootofvehicle.rotation.z, rootofvehicle.rotation.x ,  transform.rotation.z ,1);
+
+        //transform.Rotate(0f,angle,0f);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, rootofvehicle.rotation, Time.deltaTime * 4.0f);
+
+        transform.rotation = Quaternion.Slerp(rootofvehicle.rotation, rot, Time.deltaTime * 4.0f);
+
+        //transform.rotation = Quaternion.Euler(-rootofvehicle.rotation.eulerAngles.z, transform.rotation.eulerAngles.y, -rootofvehicle.rotation.eulerAngles.x);
     
     }
 }
