@@ -50,8 +50,8 @@ public class Carmove : MonoBehaviour
 
     void gearShift(){
             EngineRPM = (WheelcollsR[0].rpm + WheelcollsL[0].rpm)/GearRatio[currentGear];
-            Debug.Log(EngineRPM);
-            Debug.Log(currentGear);
+            //Debug.Log(EngineRPM);
+            //Debug.Log(currentGear);
 
             if ( EngineRPM >= MaxEngineRPM ) {
                 if(currentGear <= GearRatio.Length-2){

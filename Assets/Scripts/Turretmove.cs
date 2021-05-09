@@ -35,12 +35,12 @@ public class Turretmove : MonoBehaviour
         xRotation += Mathf.Repeat(controlInput.x, 360.0f);
         yRotation -= controlInput.y;
         yRotation = Mathf.Clamp(yRotation, yMin, yMax);
+        
         Quaternion newRotation = Quaternion.AngleAxis(xRotation, Vector3.up);
         newRotation *= Quaternion.AngleAxis(yRotation, Vector3.right);
+
         transform.rotation = newRotation;
         transform.position = target.transform.position - (transform.forward * distance);
-        
-
         
     }
 }
