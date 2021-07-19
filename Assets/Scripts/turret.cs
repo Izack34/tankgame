@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class turret : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class turret : MonoBehaviour
     public Transform BarrelRoot;
     public int TurnSpeed;
 
+    public Image ImageLooking;
+    public Transform barrelLookAt;
     private Transform startRotBarrel;
 
     private Transform startRotTurret;
@@ -20,29 +23,20 @@ public class turret : MonoBehaviour
 
     public Transform lookatobject;
     public Transform Turretbarrel;
+    private float xEulerAngle;
     private void Start() {
         startRotBarrel = BarrelRoot;
     }
     void Update()
     {
-        lookpoint();
+        SetLookpointOfCamera();
         TurretMove();
         BarrelTarget();
     }
 
 
-    void lookpoint(){
-        /*Vector3 DirectionRay1 = MainCam.transform.TransformDirection(0,0,300);
-        Ray ray = new Ray(MainCam.transform, DirectionRay1);
-
-        Debug.DrawRay(MainCam.transform.position, DirectionRay1, Color.red);
-
-        lookRoot.LookAt(ray.GetPoint);
-
-        Vector3 DirectionRay2 = lookRoot.transform.TransformDirection(0,0,300);
-    
-        Debug.DrawRay(lookRoot.transform.position, DirectionRay2, Color.blue);
-        */
+    void SetLookpointOfCamera(){
+        
 
         RaycastHit hit;
 
@@ -73,42 +67,48 @@ public class turret : MonoBehaviour
         
         float angle = Vector3.SignedAngle(transform.forward, lookRoot.forward , Vector3.up);
 
-        //if(-0.01 > angle ^ angle >  0.01){
+        
         if(angle != 0){
             //transform.rotation *= Quaternion.AngleAxis(angle*TurnSpeed*Time.deltaTime, Vector3.up); 
-
+            transform.rotation *= Quaternion.AngleAxis(angle* Time.deltaTime, Vector3.up);
         }
         
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, 
-                        Quaternion.Euler(rootofvehicle.eulerAngles.x, lookRoot.eulerAngles.y, rootofvehicle.eulerAngles.z),30 *Time.deltaTime );
+        //transform.rotation = Quaternion.RotateTowards(lookRoot.rotation, 
+        //                Quaternion.Euler(-90, 0, lookRoot.eulerAngles.z),30 *Time.deltaTime );
+        
+       
     }
 
     void BarrelTarget(){
-        /*Vector3 DirectionRay = MainCam.transform.TransformDirection(0,0,440);
+        Debug.Log(BarrelRoot.eulerAngles.x);
 
+        if(BarrelRoot.eulerAngles.x > 180){
+            Debug.Log("wiecej");
+            xEulerAngle = Mathf.Clamp(BarrelRoot.eulerAngles.x, 345, 360);
+        }else{
+            xEulerAngle = Mathf.Clamp(BarrelRoot.eulerAngles.x, 0, 7);
+        }
+        
+        Debug.Log(xEulerAngle);
+
+        Turretbarrel.rotation = Quaternion.RotateTowards(Turretbarrel.rotation, 
+                        Quaternion.Euler(xEulerAngle, transform.eulerAngles.y, transform.eulerAngles.z),20 *Time.deltaTime );
 
         RaycastHit hit;
-        Physics.Raycast(MainCam.transform.position, DirectionRay, out hit, 300);
-        Debug.Log(hit.point);
 
-        Debug.DrawRay(Turretbarrel.position, hit.point, Color.blue);
-        lookatobject.transform.LookAt(DirectionRay);
+        if (Physics.Raycast(Turretbarrel.position, Turretbarrel.TransformDirection(0,0,500), out hit, 500))
+        {
+            Debug.DrawRay(Turretbarrel.position, Turretbarrel.TransformDirection(0,0,500), Color.yellow);
+            //Debug.Log("Did Hit");
+            barrelLookAt.position = hit.point;
+        }else{
 
-        Turretbarrel.rotation = lookatobject.rotation;
+            barrelLookAt.position = Turretbarrel.position + Turretbarrel.TransformDirection(0,0,500);
+ 
+        }
 
-        float angle = Vector3.SignedAngle(BarrelRoot.forward, Turretbarrel.forward 
-                        , Vector3.right );        
-
-        //Debug.Log(angle);
+        Vector3 screenPoint = MainCam.WorldToScreenPoint(barrelLookAt.position);
+        ImageLooking.transform.position = screenPoint;
         
-        if(angle != 0){
-            
-            Turretbarrel.rotation *= Quaternion.AngleAxis(Mathf.Abs(angle)*Time.deltaTime, Vector3.right);      
-            //float rotationX = Mathf.Clamp (Turretbarrel.eulerAngles.x, -5.0F, 5.0F);
-            //Turretbarrel.rotation = Quaternion.Euler (rotationX, Turretbarrel.eulerAngles.y, Turretbarrel.eulerAngles.z);
-        }*/
-        Turretbarrel.rotation = Quaternion.RotateTowards(Turretbarrel.rotation, 
-                        Quaternion.Euler(BarrelRoot.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z),20 *Time.deltaTime );
-
     }
 }
