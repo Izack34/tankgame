@@ -1,11 +1,11 @@
 
 
 
-# Tankgame ***Not finished yet***
+# Tankgame ***(Not finished yet)***
 
-***Not finished yet***  
-
+  
 Game on Unity 2020.2.7
+
 I try to recreate World of tanks control.
 
 
