@@ -98,7 +98,7 @@ public class Carmove : MonoBehaviour
         }else{
             //Debug.Log("wad");
             //Debug.Log(troque);
-            troque = Mathf.Clamp(V.x * 30 * force * Time.deltaTime,-100000,100000);
+            troque = Mathf.Clamp(V.x * 30 * force * Time.deltaTime, -100000, 100000);
             for( int i = 0; i < WheelcollsR.Length ; i++){
                 WheelcollsR[i].motorTorque = troque / GearRatio[currentGear];
                 WheelcollsL[i].motorTorque = troque / GearRatio[currentGear];

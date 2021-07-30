@@ -19,11 +19,13 @@ public class Turretmove : MonoBehaviour
      
 
     private void Start() {
+
         Cursor.lockState = CursorLockMode.Locked;
         rb_c = target.GetComponent<Rigidbody>();
-            Cursor.lockState = CursorLockMode.Locked;
-            offset = (transform.position - target.transform.position).normalized * distance;
-            transform.position = target.transform.position + offset;
+        Cursor.lockState = CursorLockMode.Locked;
+        offset = (transform.position - target.transform.position).normalized * distance;
+        transform.position = target.transform.position + offset;
+
     }
 
     void Update()
@@ -31,7 +33,7 @@ public class Turretmove : MonoBehaviour
         if (Input.GetKey(KeyCode.Escape))
             Cursor.lockState = CursorLockMode.None;
 
-        Vector2 controlInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 controlInput = new Vector2(Input.GetAxis("Mouse X")*sensitivity, Input.GetAxis("Mouse Y")*sensitivity);
         xRotation += Mathf.Repeat(controlInput.x, 360.0f);
         yRotation -= controlInput.y;
         yRotation = Mathf.Clamp(yRotation, yMin, yMax);
